@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block content_block %}
+    <div class='container-fluid py-5'>
+        <div class='row mx-0'>
+            <div class='col-12 col-md-5'>
+                <div class='container-fluid'>
+                    <div class='row mx-0'>
+                        <div class='col-12 col-md-6'>
+                            <div class='card'>
+                                <div class='card-header text-center'>
+                                    <h5 class='mb-0'>
+                                        Overall Accuracy across sites (1 Month)
+                                    </h5>
+                                </div>
+                                <div class='card-body'>
+                                    <h3 class='mb-0 text-center'>
+                                        92%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-6'>
+                            <div class='card'>
+                                <div class='card-header text-center'>
+                                    <h5 class='mb-0'>
+                                        Overall Active Sensors % (1 Month)
+                                    </h5>
+                                </div>
+                                <div class='card-body'>
+                                    <h3 class='mb-0 text-center'>
+                                        85%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="row g-3">
+                            <div class="col-5">
+                                <label for="city_list" class="strong h5 mb-0">Select City</label>
+                                <input class="form-control" name='city_list' list="datalistOptions" id="city_list" placeholder="Type to search...">
+                                <datalist id="datalistOptions">
+                                <option value="Delhi">
+                                <option value="Mumbai">
+                                <option value="Kolkata">
+                                <option value="Seattle">
+                                <option value="Los Angeles">
+                                <option value="Chicago">
+                                </datalist>
+                              </div>
+
+                            <div class="col-6 text-end">
+                              <p for="staticEmail2" class="strong h5 mb-0 text-end">Current Timestamp</p>
+                              <p class='strong h3 mb-0' id='current_time'></p>
+                            </div>
+
+                        </form>
+                        <div class='col-12 py-5'>
+                            <div class='card'>
+                                <div class='card-header'>
+                                    <h5 class='mb-0'>
+                                        City Site Forecast
+                                    </h5>
+                                </div>
+                                <div class='card-body table-responsive' style='height:30vh'>
+                                    <table class="table ">
+                                        <thead>
+                                          <tr>
+
+                                            <th scope="col">Site Name</th>
+                                            <th scope="col">Rain Intensity</th>
+                                            <th scope="col">Rain Index</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                          </tr>
+                                          <tr>
+
+                                            <td>Jacob</td>
+                                            <td>Thornton</td>
+                                            <td>@fat</td>
+                                          </tr>
+                                          <tr>
+
+                                            <td >Larry the Bird</td>
+                                            <td>Thornton</td>
+                                            <td>@twitter</td>
+                                          </tr>
+                                          <tr>
+
+                                            <td >Larry the Bird</td>
+                                            <td>Thornton</td>
+                                            <td>@twitter</td>
+                                          </tr>
+                                          <tr>
+
+                                            <td >Larry the Bird</td>
+                                            <td>Thornton</td>
+                                            <td>@twitter</td>
+                                          </tr>
+                                          <tr>
+
+                                            <td >Larry the Bird</td>
+                                            <td>Thornton</td>
+                                            <td>@twitter</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-6'>
+                            <div class='card'>
+                                <div class='card-header text-center'>
+                                    <h5 class='mb-0'>
+                                        City Realtime Accuracy
+                                    </h5>
+                                </div>
+                                <div class='card-body'>
+                                    <h3 class='mb-0 text-center'>
+                                        80%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-12 col-md-6'>
+                            <div class='card'>
+                                <div class='card-header text-center'>
+                                    <h5 class='mb-0'>
+                                        City Overall Accuracy
+                                    </h5>
+                                </div>
+                                <div class='card-body'>
+                                    <h3 class='mb-0 text-center'>
+                                        90%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='class-12 col-md-7'>
+                <div class='card'>
+                    <div class='card-header text-center'>
+                        <h5 class='mb-0'>
+                            Live Cloud Map
+                        </h5>
+                    </div>
+                    <div class='card-body' style="height:80vh;">
+                    <img src=""  alt="cloud map">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            let getRoundedDate = (minutes, d=new Date()) => {
+
+                let ms = 1000 * 60 * minutes; // convert minutes to ms
+                let roundedDate = new Date(d.getTime()-(d.getTime()%ms));
+
+                return roundedDate
+              }
+
+            function get_time(){
+            // let timestamp = new Date(new Date().getTime() + 4*60*60*1000 ).toLocaleTimeString();
+                let timestamp = getRoundedDate(15).toLocaleTimeString()
+                $('#current_time').html(timestamp);
+                setTimeout(get_time, 1000);
+            }
+
+            get_time();
+
+
+        })
+        console.log("Hello");
+
+    </script>
+{% endblock content_block %}
