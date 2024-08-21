@@ -7,9 +7,44 @@ import geopandas as gpd
 from shapely.geometry import Point
 from shapely import centroid, Polygon
 from sklearn.metrics import accuracy_score
+import json
+
+# Database Connections
+from django.db import connections
+from django.http import JsonResponse
+from django.conf import settings
 
 # Create your views here.
 from .models import SiteConfigs,Forecast,RadarSensorComparison
+
+
+def get_connection():
+    connection1 = connections['files_data'].cursor()
+    return connection1
+
+
+# get the json response through Pandas dataframe
+def get_json_response(df: pd.DataFrame):
+    json_records = df.reset_index().to_json(orient='records')
+    data = json.loads(json_records)
+    return data
+
+
+# query Executor
+def get_sql_data(query):
+    connection1 = get_connection()
+    with connection1 as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        columns = cursor.description
+        column = []
+        for col in columns:
+            column.append(col.name)
+        df = pd.DataFrame(result, columns=column)
+        # print(df)
+        cursor.close()
+        return df
+
 
 def get_forecasted_sites():
     selected_sites = Forecast.objects.order_by('localityid').distinct('localityid')
@@ -33,6 +68,8 @@ def home_screen(request):
     # available_sites = pd.DataFrame.from_records(get_active_sites())
     # print(available_sites)
     forecasted_sites = get_forecasted_sites()
+    gif = list(get_sql_data("SELECT s3_link FROM file_logs.gif_created where s3_status= 'Uploaded' order by timestamp desc limit 1")['s3_link'])[0][4:]
+
     # print(forecasted_sites)
     site_details = SiteConfigs.objects.filter(localityid__in=forecasted_sites).all().values()
     site_details = pd.DataFrame.from_records(site_details)
@@ -49,7 +86,7 @@ def home_screen(request):
     active_sensors = len(radar_weather_data) - inactive_sensors
     # print(inactive_sensors,len(radar_weather_data))
     perc_active = round((active_sensors * 100 / len(radar_weather_data)),2)
-    return render(request=request,template_name='home.html',context={'cities':city_names,'overall_accuracy':overall_accuracy,'perc_active':perc_active})
+    return render(request=request,template_name='home.html',context={'cities':city_names,'overall_accuracy':overall_accuracy,'perc_active':perc_active,'gif':gif})
 
 
 def get_city_weather_forecast(request):

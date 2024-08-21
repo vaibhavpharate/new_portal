@@ -77,14 +77,19 @@ border-radius: 50%;
 
                                             <th scope="col">Site Name</th>
                                             <th scope="col">Timestamp</th>
-                                            <th scope="col">Rain Intensity</th>
-                                            <th scope="col">Rain Index</th>
+                                            <th scope="col">Radar rain Index</th>
+                                            <th scope="col">Sensor rain Index</th>
                                           </tr>
                                         </thead>
                                         <tbody>
 
                                         </tbody>
                                       </table>
+                                </div>
+                                <div class="card-img-overlay" style="background:grey" id="overlay">
+                                    <div class='d-flex' style="width:100%;height:100%"  class="aligh-items-middle justify-content-middle">
+                                        <h3 class="text-white text-center">Please Select City</h3>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +165,7 @@ border-radius: 50%;
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://www.openstreetmap.bzh/" target="_blank">Breton OpenStreetMap Team</a>',
             bounds: [[3, 54], [35, 96]]
             }).addTo(map);
-            var imageUrl = 'media/20240722T061500.gif',
+            var imageUrl = 'media/GIF/{{gif}}',
             imageBounds = [[2.53, 55.57], [37.62, 88.89]];
             var image_overlay = L.imageOverlay(imageUrl, imageBounds,{opacity: 0.8});
             map.addLayer(image_overlay);
@@ -169,6 +174,7 @@ border-radius: 50%;
 
             function get_city_data(){
                 let city = $('#city_select').val();
+                $('#overlay').hide();
                 // console.log(city)
                 if(city!="SELECT CITY"){
                     $('.accuracy').html("Loading..!")

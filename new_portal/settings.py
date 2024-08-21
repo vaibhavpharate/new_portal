@@ -135,6 +135,18 @@ DATABASES = {
         'PASSWORD': f'{PASSWORD}',
         'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
         'PORT': f'{PORT}',
+    },
+    'files_data':{
+         'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',/
+        'OPTIONS': {
+            'options': f'-c search_path=file_logs'
+        },
+        'NAME': 'postgres',
+        'USER': f'{USER_NAME}',
+        'PASSWORD': f'{PASSWORD}',
+        'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
+        'PORT': f'{PORT}',
     }
 }
 
