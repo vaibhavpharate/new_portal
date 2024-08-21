@@ -1,6 +1,17 @@
 {% extends "base.html" %}
+{% block style_block %}
+.marker-cluster-small{
+    background-color: rgba(226, 36, 36, 0.6);
+    border-radius: 50%;
+}
+.marker-cluster-small div {
+margin-top: 30%;
+text-align: center;
+border-radius: 50%;
+}
+{% endblock style_block %}
 {% block content_block %}
-    <div class='container-fluid py-5'>
+    <div class='container-fluid py-3'>
         <div class='row mx-0'>
             <div class='col-12 col-md-5'>
                 <div class='container-fluid'>
@@ -13,8 +24,8 @@
                                     </h5>
                                 </div>
                                 <div class='card-body'>
-                                    <h3 class='mb-0 text-center'>
-                                        92%
+                                    <h3 class='mb-0 text-center' >
+                                        <span id='one_month_accuracy' class='accuracy'></span>
                                     </h3>
                                 </div>
                             </div>
@@ -28,7 +39,7 @@
                                 </div>
                                 <div class='card-body'>
                                     <h3 class='mb-0 text-center'>
-                                        85%
+                                        <span id='sensor_activeness' class='accuracy'></span>
                                     </h3>
                                 </div>
                             </div>
@@ -36,13 +47,14 @@
                         <form class="row g-3">
                             <div class="col-5">
                                 <label for="city_list" class="strong h5 mb-0">Select City</label>
-                                <input class="form-control" name='city_list' list="datalistOptions" id="city_list" placeholder="Type to search...">
-                                <datalist id="datalistOptions">
-                                <option value="Delhi">
-                                <option value="Mumbai">
-                                <option value="Kolkata">
+                                {% comment %} <input class="form-control" name='city_list' list="datalistOptions" id="city_list" placeholder="Type to search..."> {% endcomment %}
+                                <select id="city_select" class="form-control" name='city_list' placeholder="Select City">
+                                <option selected="selected">SELECT CITY</option>
+                                {% for city in cities %}
+                                <option value="{{city}}">{{city}}</option>
+                                {% endfor %}
 
-                                </datalist>
+                                </select>
                               </div>
 
                             <div class="col-6 text-end">
@@ -51,15 +63,15 @@
                             </div>
 
                         </form>
-                        <div class='col-12 py-5'>
+                        <div class='col-12 py-3'>
                             <div class='card'>
                                 <div class='card-header'>
                                     <h5 class='mb-0'>
                                         City Site Forecast
                                     </h5>
                                 </div>
-                                <div class='card-body table-responsive' style='height:30vh'>
-                                    <table class="table ">
+                                <div class='card-body table-responsive' style='height:40vh'>
+                                    <table class="table " id='target_forecast_table'>
                                         <thead>
                                           <tr>
 
@@ -70,48 +82,7 @@
                                           </tr>
                                         </thead>
                                         <tbody>
-                                          <tr>
 
-                                            <td>Mark</td>
-                                            <td>4:15:00 pm</td>
-                                            <td>@mdo</td>
-                                            <td>Otto</td>
-                                          </tr>
-                                          <tr>
-
-                                            <td>Jacob</td>
-                                            <td>4:15:00 pm</td>
-                                            <td>@fat</td>
-                                            <td>Otto</td>
-                                          </tr>
-                                          <tr>
-
-                                            <td >Larry the Bird</td>
-                                            <td>4:15:00 pm</td>
-                                            <td>@twitter</td>
-                                            <td>Otto</td>
-                                          </tr>
-                                          <tr>
-
-                                            <td >Larry the Bird</td>
-                                            <td>4:15:00 pm</td>
-                                            <td>@twitter</td>
-                                            <td>Otto</td>
-                                          </tr>
-                                          <tr>
-
-                                            <td >Larry the Bird</td>
-                                            <td>4:15:00 pm</td>
-                                            <td>@twitter</td>
-                                            <td>Otto</td>
-                                          </tr>
-                                          <tr>
-
-                                            <td >Larry the Bird</td>
-                                            <td>4:15:00 pm</td>
-                                            <td>@twitter</td>
-                                            <td>Otto</td>
-                                          </tr>
                                         </tbody>
                                       </table>
                                 </div>
@@ -126,7 +97,7 @@
                                 </div>
                                 <div class='card-body'>
                                     <h3 class='mb-0 text-center'>
-                                        80%
+                                        <span id='real_time_accuracy' class="accuracy"></span>
                                     </h3>
                                 </div>
                             </div>
@@ -140,7 +111,7 @@
                                 </div>
                                 <div class='card-body'>
                                     <h3 class='mb-0 text-center'>
-                                        90%
+                                        <span id='overall_accuracy_all' class='accuracy'></span>
                                     </h3>
                                 </div>
                             </div>
@@ -156,7 +127,7 @@
                         </h5>
                     </div>
                     <div class='card-body' style="height:80vh;">
-                    <img src=""  alt="cloud map">
+                        <div id="map" style="height:100%"></div>
                     </div>
                 </div>
             </div>
@@ -181,7 +152,83 @@
 
             get_time();
 
+             // map leaflet
+            var map = L.map('map').setView([18.5120, 78.3290], 5.5);
+            map.options.minZoom = 5.5;
+            L.tileLayer('https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://www.openstreetmap.bzh/" target="_blank">Breton OpenStreetMap Team</a>',
+            bounds: [[3, 54], [35, 96]]
+            }).addTo(map);
+            var imageUrl = 'media/20240722T061500.gif',
+            imageBounds = [[2.53, 55.57], [37.62, 88.89]];
+            var image_overlay = L.imageOverlay(imageUrl, imageBounds,{opacity: 0.8});
+            map.addLayer(image_overlay);
+            L.control.scale().addTo(map);
 
+
+            function get_city_data(){
+                let city = $('#city_select').val();
+                // console.log(city)
+                if(city!="SELECT CITY"){
+                    $('.accuracy').html("Loading..!")
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url "get_city_weather" %}',
+                        dataType: 'json',
+                        data:{'city':city},
+                        success:function(data, status){
+                            let show_table = data.show_table;
+                            let area_data = data.single_target;
+                            let radar_data = data.send_df
+                            let cntre_x = data.x;
+                            let cntre_y = data.y;
+                            let overall_accuracy = data.overall_accuracy;
+                            let real_time_accuracy = data.real_time_accuracy;
+                            let one_month_accuracy = data.one_month_accuracy;
+                            let sensor_activeness = data.sensor_active;
+
+                            $('#real_time_accuracy').html(real_time_accuracy+"%");
+
+                            $('body').find('#overall_accuracy_all').html(overall_accuracy+"%");
+                            $('#one_month_accuracy').html(one_month_accuracy+"%");
+                            $('#sensor_activeness').html(sensor_activeness+"%")
+
+                            var markers = L.markerClusterGroup();
+                            $('#target_forecast_table').DataTable({
+                                "aaData": radar_data,
+                                "columns": [
+                                    { "data": "localityname" },
+                                    { "data": "timestamp" },
+                                    { "data": "sns_rain_index" },
+                                    { "data": "radar_rain_index" }
+                                ]
+                            });
+                            area_data.forEach((one)=>{
+                                // console.log(one.lats)
+                                some_lat = one.latitude
+                                some_lon = one.longitude
+                                var marker = L.marker(new L.LatLng(one.latitude, one.longitude));
+                                marker.bindTooltip(one.localityname, {
+                                        permanent: true,
+                                        direction: 'top',
+                                        className: "my-labels"
+                                     })
+                                markers.addLayer(marker);
+                            })
+                            map.addLayer(markers);
+                            // console.log([some_lat,some_lon])
+                            map.setView([some_lat,some_lon],12)
+                        }
+                    })
+                }
+            }
+            $('#city_select').unbind('change').change(function () {
+                // $("#target_forecast_table").DataTable().fnDestroy();
+                $("#target_forecast_table").DataTable().destroy()
+              get_city_data();
+
+            })
         })
         console.log("Hello");
 

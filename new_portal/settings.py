@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+from .configs import *
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,8 +79,62 @@ WSGI_APPLICATION = 'new_portal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'OPTIONS': {
+            'options': f'-c search_path={USER_SCHEMA},zomato_sites,zomato_new_actual,zomato_forecast_kf'},
+        'USER': f'{USER_NAME}',
+        'PASSWORD': f'{PASSWORD}',
+        'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
+        'PORT': f'{PORT}',
+    },
+    'site_configs':{
+         'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',/
+        'OPTIONS': {
+            'options': f'-c search_path=zomato_sites'
+        },
+        'NAME': 'postgres',
+        'USER': f'{USER_NAME}',
+        'PASSWORD': f'{PASSWORD}',
+        'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
+        'PORT': f'{PORT}',
+    },
+    'zomato_forecast_kf':{
+         'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',/
+        'OPTIONS': {
+            'options': f'-c search_path=zomato_forecast_kf'
+        },
+        'NAME': 'postgres',
+        'USER': f'{USER_NAME}',
+        'PASSWORD': f'{PASSWORD}',
+        'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
+        'PORT': f'{PORT}',
+    },
+        'zomato_new_actual':{
+         'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',/
+        'OPTIONS': {
+            'options': f'-c search_path=zomato_new_actual'
+        },
+        'NAME': 'postgres',
+        'USER': f'{USER_NAME}',
+        'PASSWORD': f'{PASSWORD}',
+        'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
+        'PORT': f'{PORT}',
+    },
+    'radar_data':{
+         'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',/
+        'OPTIONS': {
+            'options': f'-c search_path=radar_data'
+        },
+        'NAME': 'postgres',
+        'USER': f'{USER_NAME}',
+        'PASSWORD': f'{PASSWORD}',
+        'HOST': f'{DATABASE_HOST}',  # Or an IP Address tShat your DB is hosted on
+        'PORT': f'{PORT}',
     }
 }
 
@@ -107,7 +163,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -118,6 +174,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    # BASE_DIR / 'static',
+    os.path.join(BASE_DIR,'static')
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
