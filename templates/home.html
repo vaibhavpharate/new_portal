@@ -88,7 +88,7 @@ border-radius: 50%;
                                 </div>
                                 <div class="card-img-overlay" style="background:grey" id="overlay">
                                     <div class='d-flex' style="width:100%;height:100%"  class="aligh-items-middle justify-content-middle">
-                                        <h3 class="text-white text-center">Please Select City</h3>
+                                        <h3 class="text-white text-center" id='table'>Please Select City</h3>
                                     </div>
                                 </div>
                             </div>
@@ -174,7 +174,7 @@ border-radius: 50%;
 
             function get_city_data(){
                 let city = $('#city_select').val();
-                $('#overlay').hide();
+
                 // console.log(city)
                 if(city!="SELECT CITY"){
                     $('.accuracy').html("Loading..!")
@@ -184,6 +184,7 @@ border-radius: 50%;
                         dataType: 'json',
                         data:{'city':city},
                         success:function(data, status){
+                            $('#overlay').hide();
                             let show_table = data.show_table;
                             let area_data = data.single_target;
                             let radar_data = data.send_df
@@ -231,6 +232,8 @@ border-radius: 50%;
             }
             $('#city_select').unbind('change').change(function () {
                 // $("#target_forecast_table").DataTable().fnDestroy();
+                $('#table').html("Loading..!")
+                $('#overlay').show();
                 $("#target_forecast_table").DataTable().destroy()
               get_city_data();
 

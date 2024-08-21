@@ -74,19 +74,19 @@ def home_screen(request):
     site_details = SiteConfigs.objects.filter(localityid__in=forecasted_sites).all().values()
     site_details = pd.DataFrame.from_records(site_details)
     city_names = list(site_details['cityname'].unique())
-    latest_timestamp = round_by_round_function(datetime.now())
-    max_timestamp = latest_timestamp - timedelta(days=30)
-    radar_weather_data = RadarSensorComparison.objects.filter(timestamp__gte=max_timestamp).values()
-    radar_weather_data = pd.DataFrame.from_records(radar_weather_data).sort_values('timestamp',ascending=False)
+    # latest_timestamp = round_by_round_function(datetime.now())
+    # max_timestamp = latest_timestamp - timedelta(days=30)
+    # radar_weather_data = RadarSensorComparison.objects.filter(timestamp__gte=max_timestamp).values()
+    # radar_weather_data = pd.DataFrame.from_records(radar_weather_data).sort_values('timestamp',ascending=False)
 
-    overall_accuracy = accuracy_score(y_true=radar_weather_data['radar_rain_index'],y_pred=radar_weather_data['sns_rain_index'])
-    overall_accuracy = round(overall_accuracy * 100,2)
+    # overall_accuracy = accuracy_score(y_true=radar_weather_data['radar_rain_index'],y_pred=radar_weather_data['sns_rain_index'])
+    # overall_accuracy = round(overall_accuracy * 100,2)
 
-    inactive_sensors = radar_weather_data['sns_rain_intensity'].isna().sum()
-    active_sensors = len(radar_weather_data) - inactive_sensors
+    # inactive_sensors = radar_weather_data['sns_rain_intensity'].isna().sum()
+    # active_sensors = len(radar_weather_data) - inactive_sensors
     # print(inactive_sensors,len(radar_weather_data))
-    perc_active = round((active_sensors * 100 / len(radar_weather_data)),2)
-    return render(request=request,template_name='home.html',context={'cities':city_names,'overall_accuracy':overall_accuracy,'perc_active':perc_active,'gif':gif})
+    # perc_active = round((active_sensors * 100 / len(radar_weather_data)),2)
+    return render(request=request,template_name='home.html',context={'cities':city_names,'gif':gif})
 
 
 def get_city_weather_forecast(request):
