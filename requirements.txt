@@ -13,7 +13,7 @@ packaging==24.1
 pandas==2.2.2
 pillow==10.4.0
 plotly==5.22.0
-psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pyogrio==0.9.0
 pyproj==3.6.1
 python-dateutil==2.9.0.post0

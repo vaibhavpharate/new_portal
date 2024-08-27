@@ -4,3 +4,4 @@ models_file.py
 notebooks/
 /media
 media
+*.pyc
